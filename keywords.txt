@@ -1,0 +1,198 @@
+#######################################
+# Syntax Coloring Map For Audio
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+DFL168A	KEYWORD1
+J1939Class	KEYWORD1
+J1708Class	KEYWORD1
+ISO15765Class	KEYWORD1
+GPSClass	KEYWORD1
+PGN65267Class KEYWORD1
+PGN65262Class	KEYWORD1
+PGN65256Class	KEYWORD1
+PGN65269Class	KEYWORD1
+PGN65257Class	KEYWORD1
+PGN61444Class	KEYWORD1
+PGN61443Class	KEYWORD1
+PGN65270Class	KEYWORD1
+PGN65271Class	KEYWORD1
+PGN65272Class	KEYWORD1
+PGN65266Class	KEYWORD1
+PGN65267Class	KEYWORD1
+PGN65263Class	KEYWORD1
+PGN65253Class	KEYWORD1
+PGN65214Class	KEYWORD1
+PGN65248Class	KEYWORD1
+PGN65276Class	KEYWORD1
+PGN65265Class	KEYWORD1
+PGN57344Class	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+J1939	KEYWORD2
+J1708	KEYWORD2
+ISO15765	KEYWORD2
+GPS	KEYWORD2
+PGN65267	KEYWORD2
+PGN65262	KEYWORD2
+PGN65256	KEYWORD2
+PGN65269	KEYWORD2
+PGN65257	KEYWORD2
+PGN61444	KEYWORD2
+PGN61443	KEYWORD2
+PGN65270	KEYWORD2
+PGN65271	KEYWORD2
+PGN65272	KEYWORD2
+PGN65266	KEYWORD2
+PGN65267	KEYWORD2
+PGN65263	KEYWORD2
+PGN65253	KEYWORD2
+PGN65214	KEYWORD2
+PGN65248	KEYWORD2
+PGN65276	KEYWORD2
+PGN65265	KEYWORD2
+PGN57344	KEYWORD2
+
+getOnewireID	KEYWORD2
+getDIN	KEYWORD2
+setDOUT	KEYWORD2
+getAnalog	KEYWORD2
+beginTransparentSerial	KEYWORD2
+endTransparentSerial	KEYWORD2
+serialPortAvailable	KEYWORD2
+setExitTransparentKey	KEYWORD2
+
+getGPSinfo	KEYWORD2
+getAltitude	KEYWORD2
+
+getCoolantTemperature	KEYWORD2
+getEngineSpeed	KEYWORD2
+getVehicleSpeed	KEYWORD2
+getIntakeManifoldPressure	KEYWORD2
+getFuelSystemStatus	KEYWORD2
+getCalculatedLoadValue	KEYWORD2
+getShortTermFuelTrimBank13	KEYWORD2
+getLongTermFuelTrimBank13	KEYWORD2
+getShortTermFuelTrimBank24	KEYWORD2
+getLongTermFuelTrimBank24	KEYWORD2
+getIgnitionTimingAdvance	KEYWORD2
+getIntakeAirTemperature	KEYWORD2
+getAirFlowRateFrmMAF	KEYWORD2
+getAbsThrottlePosition	KEYWORD2
+getOxygenSensorLocation	KEYWORD2
+getBank1OSensor1Voltage	KEYWORD2
+getBank1OSensor2Voltage	KEYWORD2
+getBank1OSensor3Voltage	KEYWORD2
+getBank1OSensor4Voltage	KEYWORD2
+getBank2OSensor1Voltage	KEYWORD2
+getBank2OSensor2Voltage	KEYWORD2
+getBank2OSensor3Voltage	KEYWORD2
+getBank2OSensor4Voltage	KEYWORD2
+getBank3OSensor1Voltage	KEYWORD2
+getBank3OSensor2Voltage	KEYWORD2
+getBank4OSensor1Voltage	KEYWORD2
+getBank4OSensor2Voltage	KEYWORD2
+getOBDCertified	KEYWORD2
+getTimeSinceEngineStart	KEYWORD2
+getDistanceTraveledMIL	KEYWORD2
+getFuelRailPressure	KEYWORD2
+getFuelLevelInput	KEYWORD2
+getDistanceTraveledSinceDTC_Clear	KEYWORD2
+getBarometricPressure	KEYWORD2
+getControlModuleVoltage	KEYWORD2
+getRelativeThrottlePosition	KEYWORD2
+getAmbientTemp	KEYWORD2
+getCommandedThrottleActuatorControl	KEYWORD2
+getEngineRunTimeMIL	KEYWORD2
+getEngineRunTimeSinceDTC_Clear	KEYWORD2
+getTypeOfFuelUsedCurrently	KEYWORD2
+getRelativeAcceleratorPedalPosition	KEYWORD2
+getHybridBatteryPackRemainingLife	KEYWORD2
+getEngineOilTemperature	KEYWORD2
+getFuelRate	KEYWORD2
+getActualEngineTorque	KEYWORD2
+getMILStatus	KEYWORD2
+getEngineRunTime	KEYWORD2
+getVIN	KEYWORD2
+getDTC	KEYWORD2
+clearDTC	KEYWORD2
+
+getAirPressure	KEYWORD2
+getEngineOilPressure	KEYWORD2
+getEngineCoolantPressure	KEYWORD2
+getFuelLevel1	KEYWORD2
+getFuelLevel2	KEYWORD2
+getEngineThrottlePos	KEYWORD2
+getWasherFluidLevel	KEYWORD2
+getAccelPedalPosi1	KEYWORD2
+getAccelPedalPosi2	KEYWORD2
+getAccelPedalPosi3	KEYWORD2
+getEngineLoad	KEYWORD2
+getEngineOilLevel	KEYWORD2
+getEngineCoolantLevel	KEYWORD2
+getTransmissionOilLevel	KEYWORD2
+getTransmissionOilLevelHighLow	KEYWORD2
+getTransmissionOilPressure	KEYWORD2
+getTransmissionOilTemp	KEYWORD2
+getPowerSpecificInstantFuelEconomy	KEYWORD2
+getAvgFuelRate	KEYWORD2
+getInstantFuelEconomy	KEYWORD2
+getAvgFuelEconomy	KEYWORD2
+getElectricalVoltage	KEYWORD2
+getRatedEnginePower	KEYWORD2
+getBatteryVoltage	KEYWORD2
+getAlternatorVoltage	KEYWORD2
+getCargoAmbientTemp	KEYWORD2
+getRoadTemp	KEYWORD2
+getCabInteriorTemp	KEYWORD2
+getInletTemp	KEYWORD2
+getFuelTemp	KEYWORD2
+getOilTemp	KEYWORD2
+getCargoWeight	KEYWORD2
+getEngineTripFuel	KEYWORD2
+getEngineTotalFuelUsed	KEYWORD2
+getRatedEngineSpeed	KEYWORD2
+getFaultDescription	KEYWORD2
+getPIDSIDDescription	KEYWORD2
+getIntakeManifoldTemp	KEYWORD2
+getPowerTakeoffStatus	KEYWORD2
+getTripDistance	KEYWORD2
+getTotalDistance	KEYWORD2
+getTotalEngineHours	KEYWORD2
+getTotalEngineRevolutions	KEYWORD2
+
+
+refresh
+getNavBasedSpeed	KEYWORD2
+getEngineAirInletPressure	KEYWORD2
+getEngineExhaustGasTemp	KEYWORD2
+getEngineAirFilterDiffPressure	KEYWORD2
+getSeatBelt	KEYWORD2
+getLatitude	KEYWORD2
+getLongitude	KEYWORD2
+getFuelTemp	KEYWORD2
+getOilTemp	KEYWORD2
+getWheelBasedVehicleSpeed	KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+AUTO_PROTOCOL	LITERAL1
+ISO15765_11_500_PROTOCOL	LITERAL1
+ISO15765_29_500_PROTOCOL	LITERAL1
+ISO15765_11_250_PROTOCOL	LITERAL1
+ISO15765_29_250_PROTOCOL	LITERAL1
+J1939_PROTOCOL	LITERAL1
+USER1_PROTOCOL	LITERAL1
+USER2_PROTOCOL	LITERAL1
+J1708_PROTOCOL	LITERAL1
+WAITING	LITERAL1
+FAIL	LITERAL1
+SUCCESS	LITERAL1
