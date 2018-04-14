@@ -80,7 +80,11 @@ byte ISO15765Class::getDTC(byte &DTC_Num,String ( &DTC)[8])
   DTC[6]="";
   DTC[7]="";
   if (Pareant->ReturnStr.substring(2,4)=="00") return SUCCESS;
+  #if 0//version1.0.1 
   for (i=0;i<(Pareant->ReturnStr.length()-2)/4;i++)
+  #else
+  for (i = 0; i<(Pareant->ReturnStr.length() - 4) / 4; i++)
+  #endif
   {    
     switch(Pareant->ReturnStr.charAt(4+i*4))
     {

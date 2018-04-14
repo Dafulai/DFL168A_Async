@@ -456,22 +456,35 @@ byte J1708Class::getDTC(byte &DTC_Num,byte &MID,int (&PID_SID)[8],bool (&IsPID)[
   byte Len;
   char HexValue[]="0x00";
   int i;   
+  #if 0  //version1.0.1
   char tryTimes;
+  #else
+  static char tryTimes = 0;
+  static bool DigitalCMD_Running = false;
+  #endif
    //AT H1
   //while (!Pareant->ATCommand("AT H1"));
-  
+  #if 0  //version1.0.1 
   do {
     while (WAITING==(temp=Pareant->ATCommand("AT H1")));
   } while (FAIL==temp);
-  
+  #else
+  if (false == DigitalCMD_Running)
+  {
+	  do {
+		  while (WAITING == (temp = Pareant->ATCommand("AT H1")));
+	  } while (FAIL == temp);
+  }
+  #endif
   DTC_Num=0;
-  tryTimes=0;
+  //tryTimes=0;  //version1.0.1
   /*
   while(!Pareant->DigitalCommand("C2"))  //PID=194
   {
     tryTimes++;
     if (tryTimes>=5) {while (!Pareant->ATCommand("AT H0")); return false;}
   }   */
+  #if 0  //version1.0.1
   do
   {
     returnV=Pareant->DigitalCommand("C2"); //PID=195
@@ -488,7 +501,35 @@ byte J1708Class::getDTC(byte &DTC_Num,byte &MID,int (&PID_SID)[8],bool (&IsPID)[
       }
     }
   } while ((WAITING==returnV)||(FAIL==returnV)); 
-    
+  #else
+  returnV = Pareant->DigitalCommand("C2"); //PID=195
+  DigitalCMD_Running = true;
+  if (WAITING == returnV)
+  {
+	  return WAITING;
+  }
+  //so cmd finish, it may be FAIL, maybe SUCCESS
+  if (FAIL == returnV)
+  {
+	  tryTimes++;
+	  if (tryTimes >= 5)
+	  {
+		  tryTimes = 0;
+		  DigitalCMD_Running = false;
+		  do {
+			  while (WAITING == (temp = Pareant->ATCommand("AT H0")));
+		  } while (FAIL == temp);
+		  return FAIL;
+	  }
+	  else
+	  {
+		  return WAITING;
+	  }
+  }
+  //So cmd SUCCESS
+  DigitalCMD_Running = false;
+  tryTimes = 0;
+  #endif    
   Pareant->HandleResponse(Pareant->ReturnStr); 
   Pareant->ReturnStr.trim();    
 
@@ -596,7 +637,11 @@ byte J1708Class::clearDTC(byte MID,int PID_SID, bool IsPID)  //PID=195, and clea
   byte returnV;
   byte byteD;
   char HexValue[]="0x00";
-  char tryTimes;
+  #if 0  //version1.0.1
+    char tryTimes;
+  #else
+    static char tryTimes = 0;
+  #endif
   char cmd[]="C303000000";
   String tempStr;
   bool ExtendedPID=false;
@@ -624,20 +669,45 @@ byte J1708Class::clearDTC(byte MID,int PID_SID, bool IsPID)  //PID=195, and clea
     //Standard PID/SID
     if (IsPID) cmd[8]='A'; else cmd[8]='B';
   }
-  tryTimes=0;
+  //tryTimes=0;   //version1.0.1
   /*
   while(!Pareant->DigitalCommand(cmd))  //PID=195
   {
     tryTimes++;
     if (tryTimes>=5) { return false;}
   } */
+  #if 0  //version1.0.1
   do
   {
     returnV=Pareant->DigitalCommand(cmd); //PID=195
     if (WAITING==returnV) continue;
     tryTimes++;      
     if (tryTimes>=5) {if (FAIL==returnV) {  return FAIL;}}
-  } while ((FAIL==returnV)||(WAITING==returnV));    
+  } while ((FAIL==returnV)||(WAITING==returnV));  
+  #else
+  returnV = Pareant->DigitalCommand(cmd); //PID=195
+
+  if (WAITING == returnV)
+  {
+	  return WAITING;
+  }
+  //so cmd finish, it may be FAIL, maybe SUCCESS
+  if (FAIL == returnV)
+  {
+	  tryTimes++;
+	  if (tryTimes >= 5)
+	  {
+		  tryTimes = 0;
+		  return FAIL;
+	  }
+	  else
+	  {
+		  return WAITING;
+	  }
+  }
+  //So cmd SUCCESS
+  tryTimes = 0;
+  #endif
   Pareant->HandleResponse(Pareant->ReturnStr); 
   Pareant->ReturnStr.trim();  
   //verify pid=196 which is respond from pid=195
@@ -661,7 +731,11 @@ byte J1708Class::getFaultDescription(byte MID,int PID_SID, bool IsPID,byte FMI, 
   byte i;
   byte byteD;
   char HexValue[]="0x00";
-  char tryTimes;
+  #if 0  //version1.0.1
+    char tryTimes;
+  #else
+    static char tryTimes = 0;    
+  #endif
   char cmd[]="C303000000";
   String tempStr;
   bool ExtendedPID=false;
@@ -696,13 +770,14 @@ byte J1708Class::getFaultDescription(byte MID,int PID_SID, bool IsPID,byte FMI, 
   cmd[9]=tempStr.charAt(1);  //c: CONTROL 
   
  
-  tryTimes=0;
+  //tryTimes=0;  //version1.0.1
   /*
   while(!Pareant->DigitalCommand(cmd))  //PID=195
   {
     tryTimes++;
     if (tryTimes>=5) { return false;}
   }   */
+  #if 0  //version1.0.1
   do
   {
     returnV=Pareant->DigitalCommand(cmd); //PID=195
@@ -710,7 +785,30 @@ byte J1708Class::getFaultDescription(byte MID,int PID_SID, bool IsPID,byte FMI, 
     tryTimes++;  
     if (tryTimes>=5) {if (FAIL==returnV) {  return FAIL;}}
   } while ((FAIL==returnV)||(WAITING==returnV));
-    
+  #else
+  returnV = Pareant->DigitalCommand(cmd); //PID=195
+	
+  if (WAITING == returnV)
+  {
+	  return WAITING;
+  }
+  //so cmd finish, it may be FAIL, maybe SUCCESS
+  if (FAIL == returnV)
+  {
+	  tryTimes++;
+	  if (tryTimes >= 5)
+	  {
+		  tryTimes = 0;
+		  return FAIL;
+	  }
+	  else
+	  {
+		  return WAITING;
+	  }
+  }
+  //So cmd SUCCESS
+  tryTimes = 0;
+  #endif    
   Pareant->HandleResponse(Pareant->ReturnStr); 
   Pareant->ReturnStr.trim();  
   //get pid=196 which is respond from pid=195
@@ -755,7 +853,11 @@ byte J1708Class::getPIDSIDDescription(byte MID,int PID_SID, bool IsPID, String &
   byte i;
   byte byteD;
   char HexValue[]="0x00";
-  char tryTimes;
+  #if 0  //version1.0.1
+    char tryTimes;
+  #else
+    static char tryTimes = 0;    
+  #endif
   char cmd[]="C303000000";
   String tempStr;
   bool ExtendedPID=false;
@@ -787,18 +889,24 @@ byte J1708Class::getPIDSIDDescription(byte MID,int PID_SID, bool IsPID, String &
     if (IsPID) byteD+=0x20; else byteD+=0x30;
   }
   tempStr==String(byteD,16);
+  //version1.0.1 add----start
+  if (1 == tempStr.length())
+  {
+	  tempStr = "0" + tempStr;
+  }
+  //version1.0.1 add----end
   cmd[8]=tempStr.charAt(0);
   cmd[9]=tempStr.charAt(1);  //c: CONTROL 
   
  
-  tryTimes=0;
+  //tryTimes=0; //version1.0.1
   /*
   while(!Pareant->DigitalCommand(cmd))  //PID=195
   {
     tryTimes++;
     if (tryTimes>=5) { return false;}
   }   */
-
+  #if 0  //version1.0.1
   do
   {
     returnV=Pareant->DigitalCommand(cmd); //PID=195
@@ -806,7 +914,31 @@ byte J1708Class::getPIDSIDDescription(byte MID,int PID_SID, bool IsPID, String &
     tryTimes++;  
     if (tryTimes>=5) {if (FAIL==returnV) {  return FAIL;}}
   } while ((FAIL==returnV)||(WAITING==returnV));
-    
+  #else
+  returnV = Pareant->DigitalCommand(cmd); //PID=195
+
+  if (WAITING == returnV)
+  {
+	  return WAITING;
+  }
+  //so cmd finish, it may be FAIL, maybe SUCCESS
+  
+  if (FAIL == returnV)
+  {
+	  tryTimes++;
+	  if (tryTimes >= 5)
+	  {
+		  tryTimes = 0;
+		  return FAIL;
+	  }
+	  else
+	  {
+		  return WAITING;
+	  }
+  }
+  //So cmd SUCCESS
+  tryTimes = 0;
+  #endif     
   Pareant->HandleResponse(Pareant->ReturnStr); 
   Pareant->ReturnStr.trim();  
   //get pid=196 which is respond from pid=195
@@ -849,15 +981,19 @@ byte J1708Class::getVIN(String &VIN)
   char bufferx[30];
   char HexValue[]="0x00";
   byte i;
-  char tryTimes;
-  tryTimes=0;
+  #if 0  //version1.0.1
+    char tryTimes;
+    tryTimes = 0;
+  #else
+    static char tryTimes = 0;    
+  #endif
   /*
   while(!Pareant->DigitalCommand("ED"))  //PID=237
   {
     tryTimes++;
     if (tryTimes>=5) {VIN="";  return false;}
   }  */
-
+  #if 0  //version1.0.1
   do
   {
     returnV=Pareant->DigitalCommand("ED"); //PID=237
@@ -865,7 +1001,30 @@ byte J1708Class::getVIN(String &VIN)
     tryTimes++;  
     if (tryTimes>=5) {if (FAIL==returnV) {VIN="";  return FAIL;}}
   } while ((FAIL==returnV)||(WAITING==returnV));
-     
+  #else
+	returnV = Pareant->DigitalCommand("ED"); //PID=237	
+	if (WAITING == returnV)
+	{
+		return WAITING;
+	}
+	//so cmd finish, it may be FAIL, maybe SUCCESS
+	if (FAIL == returnV)
+	{
+		tryTimes++;
+		if (tryTimes >= 5)
+		{
+			tryTimes = 0;
+			return FAIL;
+		}
+		else
+		{
+			return WAITING;
+		}
+	}
+	//So cmd SUCCESS
+	tryTimes = 0;
+  #endif    
+
   Pareant->HandleResponse(Pareant->ReturnStr); 
   Pareant->ReturnStr.trim();    
   if (Pareant->ReturnStr.substring(0,2)!="ED") { VIN=""; returnV=FAIL; return returnV;} 
@@ -891,15 +1050,19 @@ byte J1708Class::getbyte(char cmd[],long &Out1byte, bool Signed=false)
   char Hex4Byte[]="0x00000000";    
   long temp;
   unsigned long temp2;
-  char tryTimes;
-  tryTimes=0;
+  #if 0  //version1.0.1
+    char tryTimes;
+    tryTimes = 0;
+  #else
+    static char tryTimes = 0;    
+  #endif
   /*
   while(!Pareant->DigitalCommand(cmd))
   {
     tryTimes++;
     if (tryTimes>=5) {Out1byte=0;  return false;}
   }  */
-
+  #if 0  //version1.0.1
   do
   {
     Result_RTN=Pareant->DigitalCommand(cmd);
@@ -907,7 +1070,30 @@ byte J1708Class::getbyte(char cmd[],long &Out1byte, bool Signed=false)
     tryTimes++;  
     if (tryTimes>=5) {if (FAIL==Result_RTN) {Out1byte=0;  return FAIL;} }
   } while ((FAIL==Result_RTN)||(WAITING==Result_RTN));
-  
+  #else
+	Result_RTN = Pareant->DigitalCommand(cmd);
+	if (WAITING == Result_RTN)
+	{
+		return WAITING;
+	}
+	//so cmd has finished, result is SUCCESS OR FAIL
+	if (FAIL == Result_RTN)
+	{
+		tryTimes++;
+		if (tryTimes >= 5)
+		{
+			Out1byte = 0;
+			tryTimes = 0;
+			return FAIL;
+		}
+		else
+		{
+			return WAITING;
+		}
+	}
+	//So success  
+	tryTimes = 0;
+  #endif
   Pareant->HandleResponse(Pareant->ReturnStr);  
   (Pareant->ReturnStr).trim();  
   if (Pareant->ReturnStr.substring(0,2)!=cmd) {Out1byte=0; Result_RTN=FAIL; return Result_RTN;}
@@ -992,7 +1178,7 @@ byte J1708Class::getbyte(char cmd[],long &Out1byte, bool Signed=false)
         Out1byte=temp2-4294967296;   
       else
         Out1byte=temp2;     
-      Serial.print("Data:"); Serial.println(Out1byte);      
+      //Serial.print("Data:"); Serial.println(Out1byte);      
     }
     else
     {     

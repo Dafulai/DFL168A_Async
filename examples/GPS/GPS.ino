@@ -74,6 +74,6 @@ void loop() {
  }
  //The following firmware will be the other task
  //The other task code start
- Serial.println("The other tasks are running");
+ //Serial.println("The other tasks are running");
  //The other task code end
 }

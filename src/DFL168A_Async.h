@@ -523,6 +523,10 @@ class DFL168A
     bool setExitTransparentKey(byte EndTransparentChar);  //must after begin()
     bool serialPortAvailable();  //if TransparentSerialAvailable is true, it will return true
 
+	//version1.0.1 add--start
+	bool setSleepDelay(unsigned int SleepDelayms);
+	//version1.0.1 add--End
+
     //    bool DigitalCommand(const char * CMD);
    private:
     HardwareSerial * mySerial;

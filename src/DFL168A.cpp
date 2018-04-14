@@ -54,25 +54,25 @@ DFL168A::DFL168A(HardwareSerial * XX, byte currProtocol, int Timeout,long J1939B
     ReturnStr=mySerial->readStringUntil('>');   
     
     //if  (ReturnStr=="") {ReturnValue=WAITING; return WAITING;}         
-    Serial.print(ReturnStr);     //debug     
+    //Serial.print(ReturnStr);     //debug     
     temp= (ReturnStr.length());              
     if (temp<6) 
     {
-       Serial.println("WRONG:0");
+       //Serial.println("WRONG:0");
        //SuccessCurrentProtocol=false;         because may return is not OK, such as "ATI"
        ReturnValue=FAIL;
        return ReturnValue;    
     }
     if (ReturnStr.substring(temp-6,temp-4)!="OK")
     {
-       Serial.println(ReturnStr.substring(temp-6,temp-4));
+       //Serial.println(ReturnStr.substring(temp-6,temp-4));
       // SuccessCurrentProtocol=false;        
        ReturnValue=FAIL;
        return ReturnValue; 
     }
     else
     {
-      Serial.println("correct");  
+      //Serial.println("correct");  
       ReturnValue=SUCCESS;
       return ReturnValue; 
     }                      
@@ -89,18 +89,24 @@ byte DFL168A::DigitalCommand(const char * CMD)
 
    static unsigned long tick4timeout;    
    
-   if (!SuccessCurrentProtocol) {Serial.println("FAIL PROTOCOL"); ReturnStr=""; ReturnValue=FAIL; return ReturnValue;}
+   if (!SuccessCurrentProtocol) {
+	   //Serial.println("FAIL PROTOCOL"); 
+	   ReturnStr=""; ReturnValue=FAIL; return ReturnValue;}
    i=0;
    while (CMD[i])
    {
      if (!isHexadecimalDigit(CMD[i])) {
-       if (!isSpace(CMD[i])) {Serial.println("WRONG CMD");ReturnStr=""; ReturnValue=FAIL; return ReturnValue;}
+       if (!isSpace(CMD[i])) {
+		   //Serial.println("WRONG CMD");
+		   ReturnStr=""; ReturnValue=FAIL; return ReturnValue;}
      }     
      i++;
    }
-   if ((J1939_PROTOCOL==currentProtocol)||(J1708_PROTOCOL==currentProtocol))
+   if ((J1939_PROTOCOL==currentProtocol)||(J1708_PROTOCOL==currentProtocol))  
    {
-      if (WAITING!=ReturnValue) { Serial.print("Digital Cmd ");  Serial.print(CMD); Serial.println( " start, response is:"); tick4timeout=millis(); mySerial->println(CMD); }
+      if (WAITING!=ReturnValue) { 
+		  //Serial.print("Digital Cmd ");  Serial.print(CMD); Serial.println( " start, response is:"); 
+		  tick4timeout=millis(); mySerial->println(CMD); }
    }
    else
    {
@@ -108,8 +114,15 @@ byte DFL168A::DigitalCommand(const char * CMD)
       if (ReturnValue!=WAITING) {tick=millis(); ReturnValue=WAITING; return ReturnValue;}
       if ((millis()-tick)>149) //142,bad, 146ok
       {
-         if (!Sent) { Sent=true; Serial.print("Digital Cmd ");  Serial.print(CMD); Serial.println( " start, response is:"); tick4timeout=millis(); clearRXDBuffer(); mySerial->println(CMD); }
+         if (!Sent) { 
+			 Sent=true; 
+			 //Serial.print("Digital Cmd ");  Serial.print(CMD); Serial.println( " start, response is:"); 
+			 tick4timeout=millis(); clearRXDBuffer(); mySerial->println(CMD); }
       }
+	  else
+	  {
+		  return WAITING;
+	  }
    }  
    
    //if (0==mySerial->available()) {ReturnValue=WAITING; return WAITING;}       
@@ -133,7 +146,7 @@ byte DFL168A::DigitalCommand(const char * CMD)
    ReturnStr=mySerial->readStringUntil('>');       
    //if  (ReturnStr=="") {ReturnValue=WAITING; return ReturnValue; }
    Sent=false;
-   Serial.print(ReturnStr);     //debug  
+   //Serial.print(ReturnStr);     //debug  
    len=ReturnStr.length();
    for (i=0;i<len;i++)
    {
@@ -142,7 +155,7 @@ byte DFL168A::DigitalCommand(const char * CMD)
       {
         if ((tempChar!=':') && (!isSpace(tempChar)) && (tempChar!='\r') &&(tempChar!='\n') )
         {
-          Serial.println("Digital Cmd fail");
+          //Serial.println("Digital Cmd fail");
           ReturnStr="";           
           ReturnValue=FAIL; return ReturnValue;
         }
@@ -153,7 +166,7 @@ byte DFL168A::DigitalCommand(const char * CMD)
    //remove /r/n at begining       
    if (('\n'==ReturnStr.charAt(0))||('\r'==ReturnStr.charAt(0))) ReturnStr.remove(0,1);
    if (('\n'==ReturnStr.charAt(0))||('\r'==ReturnStr.charAt(0))) ReturnStr.remove(0,1);  //secon character become first     
-   Serial.println("Digital Cmd success");
+   //Serial.println("Digital Cmd success");
    ReturnValue=SUCCESS; return ReturnValue;
 }
 /*******************************************************************************
@@ -253,11 +266,15 @@ bool DFL168A::begin(bool intrude=true,bool Fast=false) {
     String ResponseStr;
     long MyLong;
     Serial.begin(57600);  //debug 
-    delay(75);  // wait for "searing and version pass"
+    //delay(75);  // wait for "searing and version pass"   //version1.0.1
 
     mySerial->begin(57600);
     mySerial->setTimeout(Timeout+50);
     mySerial->setTimeout(50);
+
+	while (WAITING == (ATCommand("AT Z")));   //repower for sync  //version1.0.1
+	delay(75);  // wait for "searing and version pass"   //version1.0.1
+
     while (mySerial->available()) mySerial->read();
    
     while (WAITING==ATCommand("ATi"));
@@ -270,7 +287,7 @@ bool DFL168A::begin(bool intrude=true,bool Fast=false) {
     }
     if (Fast)
     {
-       Serial.println("Fast begin!");
+       //Serial.println("Fast begin!");
        SuccessCurrentProtocol=true;
        if (!intrude)
        {
@@ -304,7 +321,7 @@ bool DFL168A::begin(bool intrude=true,bool Fast=false) {
         if (FAIL==temp)            
         {          
            SuccessCurrentProtocol=false;
-           Serial.println("Fail  to AT SP");
+           //Serial.println("Fail  to AT SP");
            return false;  
         }
     }
@@ -387,21 +404,21 @@ bool DFL168A::begin(bool intrude=true,bool Fast=false) {
     //clear " Search... cannot connect "
     while (mySerial->available()) mySerial->read();
     //Wait for "Sleep warning"
-    Serial.println("We are waiting for warning!");
+    //Serial.println("We are waiting for warning!");
     //delay(3900);
     delay(4620);  //4567: not good, 4568, 4600, 4900:ok
     ResponseStr=mySerial->readString();
     
-    Serial.println(ResponseStr);
+    //Serial.println(ResponseStr);
    
     if (ResponseStr.substring(2,9)=="Warning")
     {
        SuccessCurrentProtocol=false;
-       Serial.println("I got warining");
-       return false;  
+       //Serial.println("I got warining");
+       //return false;    //version1.0.1 modification because we want to execute "AT S 0" and "GPS Initilization"
     }
-    Serial.println("end waiting for warning");
-    Serial.println(ResponseStr.substring(2,9));
+    //Serial.println("end waiting for warning");
+    //Serial.println(ResponseStr.substring(2,9));
     
     TempStr=String("AT ST"); 
     if (Timeout<=1000){
@@ -417,7 +434,7 @@ bool DFL168A::begin(bool intrude=true,bool Fast=false) {
         while (WAITING==(temp=ATCommand(bufferx)));
         if (FAIL==temp)            
         {
-           Serial.println("Fail to AT ST <=1000");
+           //Serial.println("Fail to AT ST <=1000");
            SuccessCurrentProtocol=false;
            return false;  
         }
@@ -460,7 +477,13 @@ bool DFL168A::begin(bool intrude=true,bool Fast=false) {
        while (WAITING==(temp=ATCommand("AT S 0")));
     } while (FAIL==temp) ;    
     
-    
+	//version1.0.1 add--start 
+	//at dev1 tp 6  : GPS
+	do {
+		while (WAITING == (temp = ATCommand("AT DEV1 TP 6")));
+	} while (FAIL == temp);
+	//version1.0.1 add--end
+
     //AT DEV1 PC
     while (WAITING==(temp=ATCommand("AT DEV1 PC")));
     if (FAIL==temp)  {
@@ -686,12 +709,22 @@ void DFL168A::endTransparentSerial()
   if (TransparentSerialAvailable)
   {
     mySerial->write(EndTransparentChar);
+    #if 0  //version1.0.1
     myStr=mySerial->readStringUntil('>');   
     myStr.trim();    
     if (myStr=="") 
     {
       TransparentSerialAvailable=false;
     }
+    #else
+	delay(1);
+	myStr = mySerial->readString();
+	myStr.trim();
+	if ('>' == myStr.charAt(myStr.length() - 1))
+	{
+		TransparentSerialAvailable = false;
+	}
+    #endif
   }
   
 }
@@ -713,3 +746,38 @@ void DFL168A::end(void)
   //delay(10);
   mySerial->end();
 }
+
+//version1.0.1 add--start
+bool DFL168A::setSleepDelay(unsigned int SleepDelayms)
+{
+	String TempStr, TemStr2;
+	char myCMD[18];
+	byte temp;
+	TemStr2 = String(SleepDelayms, 16);
+	switch (TemStr2.length())
+	{
+	case 1:
+		TemStr2 = "000" + TemStr2;
+		break;
+	case 2:
+		TemStr2 = "00" + TemStr2;
+		break;
+	case 3:
+		TemStr2 = "0" + TemStr2;
+		break;
+	case 4:
+		break;
+	default:
+		TemStr2 = "FFFF";
+	}
+	TempStr = String("AT Sleep") + TemStr2;
+	TempStr.toCharArray(myCMD, 18);
+
+	while (WAITING == (temp = ATCommand(myCMD)));
+
+	if (SUCCESS == temp)
+		return true;
+	else
+		return false;
+}
+//version1.0.1 add--End

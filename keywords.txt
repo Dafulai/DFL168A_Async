@@ -67,6 +67,7 @@ beginTransparentSerial	KEYWORD2
 endTransparentSerial	KEYWORD2
 serialPortAvailable	KEYWORD2
 setExitTransparentKey	KEYWORD2
+setSleepDelay	KEYWORD2
 
 getGPSinfo	KEYWORD2
 getAltitude	KEYWORD2
