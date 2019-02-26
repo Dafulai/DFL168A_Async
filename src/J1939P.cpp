@@ -178,6 +178,26 @@ PGN65262Class::PGN65262Class(class DFL168A * Pareant) {
   this->Pareant=Pareant;
 }
 
+//version 1.0.2 add ---start
+PGN64996Class::PGN64996Class() {
+	SuccessFresh = false;
+	Pareant = NULL;
+}
+PGN64996Class::PGN64996Class(class DFL168A * Pareant) {
+	SuccessFresh = false;
+	this->Pareant = Pareant;
+}
+PGN61445Class::PGN61445Class() {
+	SuccessFresh = false;
+	Pareant = NULL;
+}
+PGN61445Class::PGN61445Class(class DFL168A * Pareant) {
+	SuccessFresh = false;
+	this->Pareant = Pareant;
+}
+//version 1.0.2 add ---end
+//version 1.0.2 add ---start
+/*
 J1939Class::J1939Class():PGN65256(),PGN65269(),PGN65257(),PGN61444(),PGN61443(),PGN65270(),PGN65271(),PGN65272(),PGN65266(),PGN65263(),PGN65253(),PGN65214(),PGN65248(),PGN65276(),PGN65265(),PGN57344(),PGN65267(),PGN65262() {
   Baudrate=250000;  //250k
   Pareant=NULL;
@@ -187,7 +207,18 @@ J1939Class::J1939Class(long Baudrate,class DFL168A * Pareant):PGN65256(Pareant),
                                                               PGN65263(Pareant),PGN65253(Pareant),PGN65214(Pareant),PGN65248(Pareant),PGN65276(Pareant),PGN65265(Pareant),PGN57344(Pareant),PGN65267(Pareant),PGN65262(Pareant) {
   this->Baudrate=Baudrate;
   this->Pareant=Pareant;
+}*/
+J1939Class::J1939Class() :PGN65256(), PGN65269(), PGN65257(), PGN61444(), PGN61443(), PGN65270(), PGN65271(), PGN65272(), PGN65266(), PGN65263(), PGN65253(), PGN65214(), PGN65248(), PGN65276(), PGN65265(), PGN57344(), PGN65267(), PGN65262(), PGN64996(), PGN61445() {
+	Baudrate = 250000;  //250k
+	Pareant = NULL;
 }
+
+J1939Class::J1939Class(long Baudrate, class DFL168A * Pareant) : PGN65256(Pareant), PGN65269(Pareant), PGN65257(Pareant), PGN61444(Pareant), PGN61443(Pareant), PGN65270(Pareant), PGN65271(Pareant), PGN65272(Pareant), PGN65266(Pareant),
+PGN65263(Pareant), PGN65253(Pareant), PGN65214(Pareant), PGN65248(Pareant), PGN65276(Pareant), PGN65265(Pareant), PGN57344(Pareant), PGN65267(Pareant), PGN65262(Pareant), PGN64996(Pareant), PGN61445(Pareant) {
+	this->Baudrate = Baudrate;
+	this->Pareant = Pareant;
+}
+//version 1.0.2 add ---end
 byte J1939Class::getVIN(String &VIN)
 { 
   byte temp;
@@ -1287,4 +1318,72 @@ bool PGN57344Class::getSeatBelt(bool buckled)
   }
   return true;
 }
+//version 1.0.2 add ---start
+byte PGN64996Class::refresh()
+{
+	byte temp;
+	temp = Pareant->DigitalCommand("FDE4");
+	if (WAITING == temp) { SuccessFresh = false; return WAITING; }
+	if (FAIL == temp) { SuccessFresh = false; return FAIL; }
+	//if (!Pareant->DigitalCommand("E000")) { SuccessFresh=false; return false;}  
+	Pareant->HandleResponse(Pareant->ReturnStr);
+	(Pareant->ReturnStr).trim();
+	FreshResultStr = (Pareant->ReturnStr);
+	SuccessFresh = true;
+	return SUCCESS;
+}
+bool PGN64996Class::getPayLoad(int &PayLoad)	  //0 to 250%, 1%/bit, 0 offset
+{
+	char Hex1Byte[] = "0x00";
+	long tempV;
+	if (!SuccessFresh) return false;
+	Hex1Byte[2] = FreshResultStr.charAt(0);
+	Hex1Byte[3] = FreshResultStr.charAt(1);
+	tempV = strtol(Hex1Byte, NULL, 16);
+	if (tempV>0xfa) return false;
+	PayLoad = tempV - 0;
+	return true;
+}
 
+byte PGN61445Class::refresh()
+{
+	byte temp;
+	temp = Pareant->DigitalCommand("F005");
+	if (WAITING == temp) { SuccessFresh = false; return WAITING; }
+	if (FAIL == temp) { SuccessFresh = false; return FAIL; }
+	//if (!Pareant->DigitalCommand("E000")) { SuccessFresh=false; return false;}  
+	Pareant->HandleResponse(Pareant->ReturnStr);
+	(Pareant->ReturnStr).trim();
+	FreshResultStr = (Pareant->ReturnStr);
+	SuccessFresh = true;
+	return SUCCESS;
+}
+bool PGN61445Class::getCurrentGear(int &CurrentGear)   //-125 to 125 and 251,  1 gear value/bit, -125 offset, negative values are reverse gears, positive values are forward gears, zero is neutral. 251(0xFB) is park. 251 actual= 126, but I still use "251" for matching spec
+{
+	char Hex1Byte[] = "0x00";
+	long tempV;
+	if (!SuccessFresh) return false;
+	Hex1Byte[2] = FreshResultStr.charAt(6);
+	Hex1Byte[3] = FreshResultStr.charAt(7);
+	tempV = strtol(Hex1Byte, NULL, 16);
+	if (tempV>0xfb) return false;
+	CurrentGear = tempV - 125;
+	if (126 == CurrentGear) CurrentGear = 251;
+	return true;
+}
+bool PGN61445Class::getSelectedGear(int &SelectedGear)   //-125 to 125 and 251,  1 gear value/bit, -125 offset, negative values are reverse gears, positive values are forward gears, zero is neutral. 251(0xFB) is park. 251 actual= 126, but I still use "251" for matching spec
+{
+	char Hex1Byte[] = "0x00";
+	long tempV;
+	if (!SuccessFresh) return false;
+	Hex1Byte[2] = FreshResultStr.charAt(0);
+	Hex1Byte[3] = FreshResultStr.charAt(1);
+	tempV = strtol(Hex1Byte, NULL, 16);
+	if (tempV>0xfb) return false;
+	SelectedGear = tempV - 125;
+	if (126 == SelectedGear) SelectedGear = 251;
+	return true;
+}
+
+
+//version 1.0.2 add ---end
