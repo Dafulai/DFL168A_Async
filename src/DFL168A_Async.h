@@ -230,7 +230,11 @@ class PGN65265Class
    PGN65265Class();
    PGN65265Class(class DFL168A * Pareant);
    byte refresh();
-   bool getWheelBasedVehicleSpeed(float &WheelBasedVehicleSpeed);          
+   bool getWheelBasedVehicleSpeed(float &WheelBasedVehicleSpeed);  
+   //Mar07 2019 add SPN70 and SPN597 start (version 1.0.3)
+   bool getParkingBrake(bool &ParkingBreakSet);
+   bool getBrake(bool &BreakPedalDepressed);
+   //Mar07 2019 add SPN70 and SPN597 end
   private:
    boolean SuccessFresh;   
    String FreshResultStr;
@@ -242,7 +246,8 @@ class PGN57344Class
    PGN57344Class();
    PGN57344Class(class DFL168A * Pareant);
    byte refresh();
-   bool getSeatBelt(bool buckled);        
+   bool getSeatBelt(bool buckled); //fix bug Mar 07 2019
+   bool getSeatBelt(bool &buckled);
  private:
    boolean SuccessFresh;   
    String FreshResultStr;

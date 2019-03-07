@@ -1286,7 +1286,44 @@ bool PGN65265Class::getWheelBasedVehicleSpeed(float &WheelBasedVehicleSpeed)
   WheelBasedVehicleSpeed=tempV/256.0;  
   return true;
 }
-
+//Mar07 2019 add SPN70 and SPN597 start
+bool PGN65265Class::getParkingBrake(bool &ParkingBreakSet)
+{
+	char Hex1Byte[] = "0x00";
+	long tempV;
+	if (!SuccessFresh) return false;
+	Hex1Byte[2] = FreshResultStr.charAt(0);
+	Hex1Byte[3] = FreshResultStr.charAt(1);
+	tempV = strtol(Hex1Byte, NULL, 16);
+	tempV = (tempV >> 2) & 0x3;
+	if (0b01 == tempV) ParkingBreakSet = true;
+	else if (0b00 == tempV) ParkingBreakSet = false;
+	else
+	{
+		ParkingBreakSet = false;
+		return false;
+	}
+	return true;
+}
+bool PGN65265Class::getBrake(bool &BreakPedalDepressed)
+{
+	char Hex1Byte[] = "0x00";
+	long tempV;
+	if (!SuccessFresh) return false;
+	Hex1Byte[2] = FreshResultStr.charAt(6);
+	Hex1Byte[3] = FreshResultStr.charAt(7);
+	tempV = strtol(Hex1Byte, NULL, 16);
+	tempV = (tempV >> 4) & 0x3;
+	if (0b01 == tempV) BreakPedalDepressed = true;
+	else if (0b00 == tempV) BreakPedalDepressed = false;
+	else
+	{
+		BreakPedalDepressed = false;
+		return false;
+	}
+	return true;
+}
+//Mar07 2019 add SPN70 and SPN597 end
 byte PGN57344Class::refresh()
 {
   byte temp;
@@ -1300,7 +1337,8 @@ byte PGN57344Class::refresh()
   SuccessFresh=true;
   return SUCCESS;
 }
-bool PGN57344Class::getSeatBelt(bool buckled)
+//bool PGN57344Class::getSeatBelt(bool buckled)  //fix bug Mar 07 2019
+bool PGN57344Class::getSeatBelt(bool &buckled)
 {
   char Hex1Byte[]="0x00";
   long tempV;

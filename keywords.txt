@@ -184,6 +184,8 @@ getLongitude	KEYWORD2
 getFuelTemp	KEYWORD2
 getOilTemp	KEYWORD2
 getWheelBasedVehicleSpeed	KEYWORD2
+getParkingBrake	KEYWORD2
+getBrake	KEYWORD2
 getPayLoad	KEYWORD2
 getCurrentGear	KEYWORD2
 getSelectedGear	KEYWORD2
