@@ -173,7 +173,7 @@ getTotalEngineHours	KEYWORD2
 getTotalEngineRevolutions	KEYWORD2
 
 
-refresh
+refresh	KEYWORD2
 getNavBasedSpeed	KEYWORD2
 getEngineAirInletPressure	KEYWORD2
 getEngineExhaustGasTemp	KEYWORD2
