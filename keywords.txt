@@ -32,6 +32,7 @@ PGN65265Class	KEYWORD1
 PGN57344Class	KEYWORD1
 PGN64996Class	KEYWORD1
 PGN61445Class	KEYWORD1
+PGN65268Class	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -62,6 +63,7 @@ PGN65265	KEYWORD2
 PGN57344	KEYWORD2
 PGN64996	KEYWORD2
 PGN61445	KEYWORD2
+PGN65268	KEYWORD2
 
 getOnewireID	KEYWORD2
 getDIN	KEYWORD2
@@ -189,7 +191,10 @@ getBrake	KEYWORD2
 getPayLoad	KEYWORD2
 getCurrentGear	KEYWORD2
 getSelectedGear	KEYWORD2
-
+getTirePressure	KEYWORD2
+getTireTemperature	KEYWORD2
+getTireLocation	KEYWORD2
+getTireValvePressureMonitor	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
